@@ -9,7 +9,7 @@
   {
     "objectID": "Blog.html",
     "href": "Blog.html",
-    "title": "Blog",
+    "title": "People",
     "section": "",
     "text": "The value of contemplative ecology\n\n\n\n\n\n\ncontemplative\n\n\n\nSome thoughts about it\n\n\n\n\n\nOct 21, 2024\n\n\nJohn Doe\n\n\n\n\n\n\n\n\n\n\n\n\nThe value of computational ecology\n\n\n\n\n\n\ncomputational\n\n\n\nSome thoughts about it\n\n\n\n\n\nOct 20, 2024\n\n\nJohn Doe\n\n\n\n\n\n\nNo matching items"
   },
@@ -37,22 +37,22 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Finley Malloc",
+    "title": "European Network of Ethnobiologists",
     "section": "",
-    "text": "Finley Malloc is the Chief Data Scientist at Wengo Analytics. When not innovating on data platforms, Finley enjoys spending time unicycling and playing with her pet iguana."
+    "text": "The European Network of Ethnobiologists is a network people working, interested or related to ethnobiology based in Europe. With this web we aim to expand our network, share and publish new publications and be able to reach new ethnobiologists!"
   },
   {
-    "objectID": "index.html#education",
-    "href": "index.html#education",
-    "title": "Finley Malloc",
-    "section": "Education",
-    "text": "Education\nUniversity of California, San Diego | San Diego, CA PhD in Mathematics | Sept 2011 - June 2015\nMacalester College | St. Paul MA B.A in Economics | Sept 2007 - June 2011"
+    "objectID": "index.html#interests",
+    "href": "index.html#interests",
+    "title": "European Network of Ethnobiologists",
+    "section": "Interests",
+    "text": "Interests\nEthnoecoogy Ethnomicology Ethnobotany Ethnozoology Decolonization Ecological Knowledge Traditional Knowledge"
   },
   {
-    "objectID": "index.html#experience",
-    "href": "index.html#experience",
-    "title": "Finley Malloc",
-    "section": "Experience",
-    "text": "Experience\nWengo Analytics | Head Data Scientist | April 2018 - present\nGeoScynce | Chief Analyst | Spet 2012 - April 2018"
+    "objectID": "index.html#last-news",
+    "href": "index.html#last-news",
+    "title": "European Network of Ethnobiologists",
+    "section": "Last News!",
+    "text": "Last News!"
   }
 ]
