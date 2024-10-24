@@ -4,10 +4,10 @@ project:
 
 
 website:
-  title: "My website"
-  description: "I am a scientist"
-  site-url: https://pakillo.github.io/academic-website-template-Quarto
-  repo-url: https://github.com/Pakillo/academic-website-template-Quarto
+  title: "European Network of Ethnobiologists"
+  description: "Since 2024"
+  site-url: https://juliagdealedo.github.io/european_ethnobiology
+  repo-url: https://github.com/juliagdealedo/european_ethnobiology
   # favicon: logo.png
   twitter-card: true
   #   creator: "@handle"

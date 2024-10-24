@@ -1,5 +1,5 @@
 ---
-title: "Blog"
+title: "People"
 listing:
   contents: posts
   type: default

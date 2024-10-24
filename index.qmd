@@ -1,5 +1,5 @@
 ---
-title: "Finley Malloc"
+title: "European Network of Ethnobiologists"
 about:
   template: trestles
   image: avatar.jpg
@@ -7,10 +7,6 @@ about:
     - icon: envelope
       # text: email
       href: "mailto: test@example.com"
-    - icon: mastodon
-      href: https://joinmastodon.org
-    - text: "{{< iconify fa6-brands bluesky title='BlueSky'>}}"
-      href: https://bsky.app
     - text: "{{< iconify fa6-brands x-twitter title='Twitter'>}}"
       href: https://x.com
     - icon: github
@@ -19,28 +15,22 @@ about:
       href: https://linkedin.com/
     - text: "{{< iconify academicons google-scholar-square size=1.2em title='Scholar'>}}"
       href: https://scholar.google.com
-    - text: "{{< iconify fa6-brands orcid size=1.2em title='ORCID' >}}"
-      href: https://orcid.org/
-    # - icon: twitter
-    #   text: twitter
-    #   href: https://twitter.com
-    # - icon: github
-    #   text: Github
-    #   href: https://github.com
 ---
 
-Finley Malloc is the Chief Data Scientist at Wengo Analytics. When not innovating on data platforms, Finley enjoys spending time unicycling and playing with her pet iguana.
+The European Network of Ethnobiologists is a network people working, interested or related to ethnobiology based in Europe. With this web we aim to expand our network, share and publish new publications and be able to reach new ethnobiologists!
 
-## Education
+## Interests
 
-University of California, San Diego | San Diego, CA
-PhD in Mathematics | Sept 2011 - June 2015
+Ethnoecoogy
+Ethnomicology
+Ethnobotany
+Ethnozoology
+Decolonization
+Ecological Knowledge
+Traditional Knowledge
 
-Macalester College | St. Paul MA
-B.A in Economics | Sept 2007 - June 2011
+## Last News!
 
-## Experience
 
-Wengo Analytics | Head Data Scientist | April 2018 - present
 
-GeoScynce | Chief Analyst | Spet 2012 - April 2018
+
