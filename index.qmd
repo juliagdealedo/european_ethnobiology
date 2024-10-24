@@ -1,0 +1,46 @@
+---
+title: "Finley Malloc"
+about:
+  template: trestles
+  image: avatar.jpg
+  links:
+    - icon: envelope
+      # text: email
+      href: "mailto: test@example.com"
+    - icon: mastodon
+      href: https://joinmastodon.org
+    - text: "{{< iconify fa6-brands bluesky title='BlueSky'>}}"
+      href: https://bsky.app
+    - text: "{{< iconify fa6-brands x-twitter title='Twitter'>}}"
+      href: https://x.com
+    - icon: github
+      href: https://github.com
+    - icon: linkedin
+      href: https://linkedin.com/
+    - text: "{{< iconify academicons google-scholar-square size=1.2em title='Scholar'>}}"
+      href: https://scholar.google.com
+    - text: "{{< iconify fa6-brands orcid size=1.2em title='ORCID' >}}"
+      href: https://orcid.org/
+    # - icon: twitter
+    #   text: twitter
+    #   href: https://twitter.com
+    # - icon: github
+    #   text: Github
+    #   href: https://github.com
+---
+
+Finley Malloc is the Chief Data Scientist at Wengo Analytics. When not innovating on data platforms, Finley enjoys spending time unicycling and playing with her pet iguana.
+
+## Education
+
+University of California, San Diego | San Diego, CA
+PhD in Mathematics | Sept 2011 - June 2015
+
+Macalester College | St. Paul MA
+B.A in Economics | Sept 2007 - June 2011
+
+## Experience
+
+Wengo Analytics | Head Data Scientist | April 2018 - present
+
+GeoScynce | Chief Analyst | Spet 2012 - April 2018
