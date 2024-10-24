@@ -48,13 +48,13 @@ website:
 
   page-footer:
     background: light
-    right: "Made with Quarto"
+    right: "Write to us fot more information! Let's start a collaboration!"
   # back-to-top-navigation: true
 
 
 format:
   html:
-    theme: flatly
+    theme: litera
     css: styles.css
     toc: false
 
