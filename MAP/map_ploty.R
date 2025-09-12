@@ -26,6 +26,7 @@ fig <- fig %>% layout(title = '2014 US city populations<br>(Click legend to togg
 fig
 
 
+htmlwidgets::saveWidget(fig, "mapa2_interactivo.html")
 
 
 library(rnaturalearth)
@@ -56,4 +57,5 @@ g <- ggplot() +
   theme_minimal()
 
 p <- ggplotly(g, tooltip = "text")
+p
 htmlwidgets::saveWidget(p, "mapa_interactivo.html")
