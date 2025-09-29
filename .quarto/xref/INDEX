@@ -1,0 +1,26 @@
+{
+  "posts/another-post.qmd": {
+    "another-post.html": "60b247fc"
+  },
+  "posts/new-post.qmd": {
+    "new-post.html": "553a1aad"
+  },
+  "projects/computational-ecology.qmd": {
+    "computational-ecology.html": "9a38a225"
+  },
+  "projects/contemplative-ecology.qmd": {
+    "contemplative-ecology.html": "7bb9a855"
+  },
+  "Projects.qmd": {
+    "Projects.html": "d0db0328"
+  },
+  "index.qmd": {
+    "index.html": "5842cc02"
+  },
+  "Publications.qmd": {
+    "Publications.html": "41cead6b"
+  },
+  "Blog.qmd": {
+    "Blog.html": "2f9a96a5"
+  }
+}
