@@ -178,7 +178,7 @@ htmlwidgets::saveWidget(p, "mapa_interactivo3.html")
 #### data
 df <- read_xlsx("MAP/European Network of Ethnobiology.xlsx")
 # specify encoding! now some words are not well recognized
-
+View(df)
 df <- df %>%
   rename(res_name = "Your name:",
          res_surname = "Your surname:",
@@ -210,7 +210,7 @@ popup_inst_points <- df %>%
   )
 df <- df %>%
   left_join(popup_inst_points, by = "institution")
-
+View(df)
 icon_inst <- makeIcon(
   iconUrl = "MAP/images/img.png",
   iconWidth = 15, iconHeight = 15,
@@ -226,6 +226,7 @@ popup_inst <- df %>%
   group_by(inst_country) %>%
   summarise(researchers = paste0("<b>", institution, "</b><br>",
                                  researchers, collapse = "<br><br>"))
+
 inst_countries <- world_data %>% filter(admin %in% unique(df$inst_country))
 inst_countries <- inst_countries %>%
   left_join(popup_inst, by = c("admin" = "inst_country"))
@@ -234,18 +235,22 @@ inst_countries <- inst_countries %>%
 df_field <- df %>%
   separate_rows(field, sep = ";") %>%
   mutate(researchers = paste(name, collapse = "<br>"))
+
 # popup text for countries where researchers conduct fieldwork
 popup_field <- df_field %>%
   group_by(field) %>%
   summarise(researchers = paste(name, collapse = "<br>"))
+
 field_countries <- world_data %>% filter(admin %in% unique(df_field$field))
 field_countries <- field_countries %>%
   left_join(popup_field, by = c("admin" = "field"))
-
+View(df)
 # disciplines filter
 df_disc <- df %>%
   separate_rows(disc, sep = ";")
+
 disciplines <- unique(df_disc$disc)
+
 for (d in disciplines) {
   df_d <- df_disc %>% filter(disc == d)
   lf <- lf %>%
@@ -254,6 +259,9 @@ for (d in disciplines) {
                popup = ~paste0("<b>", institution, "</b><br>", name),
                group = d)
 }
+
+
+names=inst_countries$name
 
 lf <- leaflet(df) %>%
   addProviderTiles(providers$CartoDB.Positron) %>%
@@ -270,7 +278,8 @@ lf <- leaflet(df) %>%
   addMarkers(~Longitude, ~Latitude,
              popup = ~text_popup,
              group = "Institutions",
-             icon = icon_inst) %>%
+             icon = icon_inst,
+             clusterOptions = markerClusterOptions()) %>%
   # layer for fieldwork countries
   addPolygons(data = field_countries,
               fillColor = "#1c8d1c",
@@ -284,30 +293,69 @@ lf <- leaflet(df) %>%
     overlayGroups = c("Countries", "Institutions", "Fieldwork"),
     options = layersControlOptions(collapsed = FALSE)
   )
-
+lf
 # layer for disciplines points not working!
-lf <- lf %>%
+lf_disc <- lf %>%
+  # addMarkers(data = df_disc,
+  #            ~Longitude, ~Latitude,
+  #            popup = ~paste0("<b>", institution, "</b><br>",
+  #                          name, "<br><i>", disc, "</i>"),
+  #            group = "Disciplines") %>%
   addMarkers(data = df_disc,
              ~Longitude, ~Latitude,
-             popup = ~paste0("<b>", institution, "</b><br>",
-                           name, "<br><i>", disc, "</i>"),
-             group = "Disciplines") %>%
+             popup = ~paste0("<i>", disc, "</i>"),
+             label = ~paste0("<i>", disc, "</i>"),
+             group = "Disciplines", clusterOptions = markerClusterOptions()) %>%
   # control de capas como antes
   addLayersControl(
     overlayGroups = c("Countries", "Fieldwork", "Institutions", "Disciplines"),
     options = layersControlOptions(collapsed = FALSE)
-  ) %>%
-  # supuestamente añade buscador pero no va¿?
-  addSearchFeatures(
-    targetGroups = "Disciplines",
-    options = searchFeaturesOptions(
-      zoom = 10,
-      openPopup = TRUE,
-      firstTipSubmit = TRUE,
-      autoType = TRUE,
-      autoCollapse = TRUE,
-      hideMarkerOnCollapse = TRUE
-    )
   )
 
-saveWidget(lf, "mapa_interactivo_lf.html")
+  # # supuestamente añade buscador pero no va¿?
+  # addSearchFeatures(
+  #   targetGroups = 'Disciplines',
+  #   options = searchFeaturesOptions(
+  #     zoom = 20,
+  #     openPopup = TRUE,
+  #     firstTipSubmit = TRUE,
+  #     autoType = TRUE,
+  #     autoCollapse = TRUE,
+  #     hideMarkerOnCollapse = TRUE
+  #   )
+  # )
+
+
+addSearchFeatures(lf_disc,
+  targetGroups = 'Disciplines',
+  options = searchFeaturesOptions())
+
+lf_busc = addSearchFeatures(lf_disc,
+  targetGroups = "Disciplines",
+  options = searchFeaturesOptions(zoom=5, openPopup = TRUE)
+)
+lf_busc
+saveWidget(lf_busc, "mapa_interactivo_lf_jga.html")
+
+
+
+library(leaflet)
+library(leaflet.extras)
+library(sf)
+
+# Example: Natural Earth countries (sf object)
+world <- st_read(system.file("shape/nc.shp", package="sf")) # replace with your countries
+world$NAME
+leaflet(world) %>%
+  addTiles() %>%
+  addPolygons(
+    group = "Countries",
+    label = ~NAME,
+    popup = ~NAME
+  ) %>%
+  addSearchFeatures(
+    targetGroups = "Countries",
+    options = searchFeaturesOptions(zoom=5, openPopup = TRUE)
+  )
+
+
