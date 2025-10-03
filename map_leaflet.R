@@ -82,10 +82,10 @@ world_data <- ne_countries(scale = "medium", returnclass = "sf")
 #                         paste(name, collapse = "<br>")),
 #     .groups = "drop"
 #   )
-# 
+#
 # df <- df %>%
 #   left_join(popup_inst_points, by = "institution")
-# 
+#
 
 ## Institutions countries
 # popup text for researchers institutions in each country
@@ -123,12 +123,6 @@ field_countries <- field_countries %>%
                              admin, "</b></span><br>",
                              researchers))
 
-#### Disciplines filter
-# df_disc <- df %>%
-#   separate_rows(disc, sep = ";")
-# 
-# disciplines <- unique(df_disc$disc)
-# discipline_groups <- paste0("Discipline: ", disciplines)
 
 #### PLOT
 ## base map with main layers
@@ -136,7 +130,7 @@ lf <- leaflet(df) %>%
   setView(lng = mean(df$Longitude, na.rm = TRUE),
           lat = mean(df$Latitude, na.rm = TRUE),
           zoom = 3) %>%
-  addProviderTiles(providers$CartoDB.Positron) %>%
+  addProviderTiles(providers$CartoDB.Voyager) %>%
   # Researchers
   addMarkers(~Longitude, ~Latitude,
              popup = ~link_ok_pop,
@@ -205,3 +199,15 @@ lf <- lf %>%
 
 
 saveWidget(lf, "mapa_interactivo_lf3.html")
+
+
+
+
+
+#### Disciplines filter
+# df_disc <- df %>%
+#   separate_rows(disc, sep = ";")
+#
+# disciplines <- unique(df_disc$disc)
+# discipline_groups <- paste0("Discipline: ", disciplines)
+
