@@ -7,21 +7,20 @@ library(sf)
 library(readxl)
 library(plotly)
 library(leaflet)
-library(leaflet.providers) # other base maps https://leaflet-extras.github.io/leaflet-providers/preview/
+library(leaflet.providers) # other base maps
+# https://leaflet-extras.github.io/leaflet-providers/preview/
 library(leaflet.extras) # for layers and sublayers
 library(htmlwidgets)
 library(googlesheets4)
 
 
 ################### LEAFLET ####################
-#### data
+#### Data
 df <- read_xlsx("MAP/European Network of Ethnobiology.xlsx")
 
 # sheet_url <- "https://docs.google.com/dfasdasd"
 # df <- read_sheet(sheet_url)
 
-# specify encoding! now some words are not well recognized
-colnames(df)
 df <- df %>%
   rename(res_name = "Your name:",
          res_surname = "Your surname:",
@@ -33,6 +32,7 @@ df <- df %>%
          disc = "Main subdiscipines:",
          link1 = "Link 1 - Your personal website or university page:",
          link2 = "Link 2 - Your article depository:") %>%
+  mutate(disc = str_replace_all(disc, ";", ", ")) %>%
   mutate(name = paste(res_name, res_surname)) %>%
   separate(inst_coord,
            into = c("Latitude", "Longitude"),
@@ -41,60 +41,53 @@ df <- df %>%
            into = c("Mun_Latitude", "Mun_Longitude"),
            sep = ", ", convert = TRUE)
 
-
-
-link_ok = df %>%
+#### Researchers
+## popup with links if available, discipline and institution
+researchers_popup <- df %>%
   group_by(name) %>%
-  summarise(link_ok_pop = if_else(link2 != NA,
-                                  paste ("<a href=", link2,">", name, "</a>" ,"<br>",
-                                                     "- Discipline: ", disc, "<br>", "- Institution: ", institution),
-                                  "") )
-
-#
-# link_ok = df %>%
-#   group_by(name) %>%
-#   summarise(link_ok_pop = paste ("<a href=", link2,">", name, "</a>" ,"<br>",
-#                                  "- Discipline: ", disc, "<br>", "- Institution: ", institution))
-
+  summarise(
+    link_ok_pop = case_when( # case_when as consecutive ifs
+      !is.na(link2) & link2 != "" ~ paste0("<div style='max-width:300px; word-break:break-word;'>", #supuestamente para que el texto no se salga del cuadro
+                                           "<a href='", link2,
+                                           "'><span style='font-size:16px;'>",
+                                           name, "</span></a><br>",
+                                           "<b>Discipline: </b>", disc, "<br>",
+                                           "<b>Institution: </b>",
+                                           institution, "</div>"),
+      !is.na(link1) & link1 != "" ~ paste0("<div style='max-width:300px; word-break:break-word;'>",
+                                           "<a href='", link1, "'>",
+                                           "<span style='font-size:16px;'>",
+                                           name, "</span></a><br>",
+                                           "<b>Discipline: </b>", disc, "<br>",
+                                           "<b>Institution: </b>",
+                                           institution, "</div>"),
+      TRUE ~ paste0("<div style='max-width:300px; word-break:break-word;'>",
+                    "<span style='font-size:16px;'><b>", name,
+                    "</b></span><br>", "<b>Discipline:</b> ",
+                    disc, "<br>", "<b>Institution:</b> ", institution, "</div>")
+    )
+  )
 df <- df %>%
-  left_join(link_ok, by = "name")
+  left_join(researchers_popup, by = "name")
 
-#### countries
+
+#### Countries
 world_data <- ne_countries(scale = "medium", returnclass = "sf")
 
+## Institutions
+# popup_inst_points <- df %>%
+#   group_by(institution) %>%
+#   summarise(
+#     text_popup = paste0("<b>", institution, "</b><br>",
+#                         paste(name, collapse = "<br>")),
+#     .groups = "drop"
+#   )
+# 
+# df <- df %>%
+#   left_join(popup_inst_points, by = "institution")
+# 
 
-# institutions
-popup_inst_points <- df %>%
-  group_by(institution) %>%
-  summarise(
-    text_popup = paste0("<b>", institution, "</b><br>",
-                        paste(name, collapse = "<br>")),
-    .groups = "drop"
-  )
-
-df <- df %>%
-  left_join(popup_inst_points, by = "institution")
-
-icon_inst <- makeIcon(
-  iconUrl = "MAP/images/img.png",
-  iconWidth = 15, iconHeight = 15,
-  iconAnchorX = 0, iconAnchorY = 0 # needs to be adjusted
-)
-
-
-# people and discipline
-popup_people_disc <- df %>%
-  group_by(name) %>%
-  summarise(
-    text_popup_people_disc = paste0("<b>", name, "</b><br>",
-                        paste(disc, collapse = "<br>")),
-    .groups = "drop"
-  )
-
-df <- df %>%
-  left_join(popup_people_disc, by = "name")
-
-# institutions countries
+## Institutions countries
 # popup text for researchers institutions in each country
 # grouped by institution
 popup_inst <- df %>%
@@ -103,9 +96,17 @@ popup_inst <- df %>%
 
 inst_countries <- world_data %>% filter(admin %in% unique(df$inst_country))
 inst_countries <- inst_countries %>%
-  left_join(popup_inst, by = c("admin" = "inst_country"))
+  left_join(popup_inst, by = c("admin" = "inst_country")) %>%
+  mutate(popup_text = paste0("<span style='font-size:14px;'><b>",
+                             admin, "</b></span><br>",
+                             researchers))
+icon_inst <- makeIcon(
+  iconUrl = "MAP/images/img.png",
+  iconWidth = 15, iconHeight = 15,
+  iconAnchorX = 0, iconAnchorY = 0 # needs to be adjusted
+)
 
-# fieldwork
+## Fieldwork
 df_field <- df %>%
   separate_rows(field, sep = ";") %>%
   mutate(researchers = paste(name, collapse = "<br>"))
@@ -117,79 +118,90 @@ popup_field <- df_field %>%
 
 field_countries <- world_data %>% filter(admin %in% unique(df_field$field))
 field_countries <- field_countries %>%
-  left_join(popup_field, by = c("admin" = "field"))
+  left_join(popup_field, by = c("admin" = "field")) %>%
+  mutate(popup_text = paste0("<span style='font-size:14px;'><b>",
+                             admin, "</b></span><br>",
+                             researchers))
 
-# disciplines filter
-df_disc <- df %>%
-  separate_rows(disc, sep = ";")
+#### Disciplines filter
+# df_disc <- df %>%
+#   separate_rows(disc, sep = ";")
+# 
+# disciplines <- unique(df_disc$disc)
+# discipline_groups <- paste0("Discipline: ", disciplines)
 
-disciplines <- unique(df_disc$disc)
-
-lf <-leaflet(df) %>%
-
+#### PLOT
+## base map with main layers
+lf <- leaflet(df) %>%
+  setView(lng = mean(df$Longitude, na.rm = TRUE),
+          lat = mean(df$Latitude, na.rm = TRUE),
+          zoom = 3) %>%
   addProviderTiles(providers$CartoDB.Positron) %>%
+  # Researchers
+  addMarkers(~Longitude, ~Latitude,
+             popup = ~link_ok_pop,
+             label = ~name,
+             group = "Researchers",
+             icon = icon_inst,
+             clusterOptions = markerClusterOptions(
+              iconCreateFunction = JS(
+                "function(cluster) {
+                  return L.divIcon({
+                    html: '<div style=\"background-color: #FFE2C7; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; border: 2px solid white;\">' + cluster.getChildCount() + '</div>',
+                    className: 'marker-cluster',
+                    iconSize: L.point(40, 40)
+                  });
+                }"
+             ))) %>%
 
-  # PEOPLE
-  addMarkers(
-    ~Longitude, ~Latitude,
-    popup=~link_ok_pop,
-    label=~name,
-    group = "People",
-    clusterOptions = markerClusterOptions()) %>%
-
-  # FIELDWORK
+  # Fieldwork
   addPolygons(data = field_countries,
               fillColor = "#FFE2C7",
               fillOpacity = 0.3,
-              color = "#1A4548",
+              color = "#e2c7ae",
               weight = 1,
-              popup = ~paste0("<b>", admin, "</b><br>", researchers),
+              popup = ~popup_text,
               group = "Fieldwork") %>%
 
-  # COUNTRIES AND PEOPLE
+  # Institutions countries
   addPolygons(data = inst_countries,
-              fillColor = topo.colors(n = nrow(inst_countries)),
-              fillOpacity = 0.2,
-              color = "black",
+              fillColor = "#1A4548",
+              fillOpacity = 0.3,
+              color = "#1A4548",
               weight = 1,
-              popup = ~paste0("<b>", admin, "</b><br>", researchers),
-              group = "Countries") %>%
+              popup = ~popup_text,
+              group = "Institutions")
 
-  # # INSTITUTIONS
-  # addMarkers(~Longitude, ~Latitude,
-  #            #popup = ~text_popup,
-  #            #label = ~text_popup,
-  #            #popup = ~institution,
-  #            label = ~institution,
-  #            group = "Institutions",
-  #            icon = icon_inst,
-  #            clusterOptions = markerClusterOptions())  %>%
-
-  # # DISCIPLINES
-  # addCircleMarkers(
-  #            ~Longitude, ~Latitude,
-  #            #popup = ~disc,
-  #            label = ~disc,
-  #            group = "Disciplines",
-  #            clusterOptions = markerClusterOptions()) %>%
-  #
-  # LEYENDA
+## layer for each discipline NO FUNKA
+# for (d in disciplines) {
+#   df_d <- df_disc %>% filter(disc == d)
+#   lf <- lf %>%
+#     addCircleMarkers(data = df_d,
+#                      ~Longitude, ~Latitude,
+#                      popup = ~link_ok_pop,
+#                      label = ~name,
+#                      group = paste0("Discipline: ", d),
+#                      radius = 5,
+#                      fillOpacity = 0.8,
+#                      color = "#1A4548")
+# }
+## Leyend and layers control
+lf <- lf %>%
   addLayersControl(
-    overlayGroups = c("People", "Countries", "Fieldwork"),
+    overlayGroups = c("Researchers",
+                      "Institutions",
+                      "Fieldwork"),
     options = layersControlOptions(collapsed = FALSE)) %>%
+    hideGroup("Fieldwork")
 
-  # BUSCADOR
-  addSearchFeatures(targetGroups = "People",
-                    options = searchFeaturesOptions(zoom=10, openPopup = TRUE,
-                                                    firstTipSubmit = F,
+## Search bar
+lf <- lf %>%
+  addSearchFeatures(targetGroups = "Researchers",
+                    options = searchFeaturesOptions(zoom = 10, openPopup = TRUE,
+                                                    firstTipSubmit = FALSE,
                                                     autoType = TRUE,
                                                     autoCollapse = TRUE,
                                                     hideMarkerOnCollapse = TRUE))
 
 
-lf
-
-
 saveWidget(lf, "mapa_interactivo_lf3.html")
-
-
