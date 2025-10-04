@@ -48,14 +48,14 @@ researchers_popup <- df %>%
   summarise(
     link_ok_pop = case_when( # case_when as consecutive ifs
       !is.na(link2) & link2 != "" ~ paste0("<div style='max-width:300px; word-break:break-word;'>", #supuestamente para que el texto no se salga del cuadro
-                                           "<a href='", link2,
-                                           "'><span style='font-size:16px;'>",
+                                           "<a href='", link2, "' target='_blank'> ",
+                                           "<span style='font-size:16px;'>",
                                            name, "</span></a><br>",
                                            "<b>Discipline: </b>", disc, "<br>",
                                            "<b>Institution: </b>",
                                            institution, "</div>"),
       !is.na(link1) & link1 != "" ~ paste0("<div style='max-width:300px; word-break:break-word;'>",
-                                           "<a href='", link1, "'>",
+                                           "<a href='", link1, "' target='_blank'> ",
                                            "<span style='font-size:16px;'>",
                                            name, "</span></a><br>",
                                            "<b>Discipline: </b>", disc, "<br>",
@@ -67,6 +67,7 @@ researchers_popup <- df %>%
                     disc, "<br>", "<b>Institution:</b> ", institution, "</div>")
     )
   )
+
 df <- df %>%
   left_join(researchers_popup, by = "name")
 
@@ -164,7 +165,7 @@ lf <- leaflet(df) %>%
               color = "#1A4548",
               weight = 1,
               popup = ~popup_text,
-              group = "Institutions")
+              group = "Institutions' countries")
 
 ## layer for each discipline NO FUNKA
 # for (d in disciplines) {
@@ -183,7 +184,7 @@ lf <- leaflet(df) %>%
 lf <- lf %>%
   addLayersControl(
     overlayGroups = c("Researchers",
-                      "Institutions",
+                      "Institutions' countries",
                       "Fieldwork"),
     options = layersControlOptions(collapsed = FALSE)) %>%
     hideGroup("Fieldwork")
@@ -197,8 +198,8 @@ lf <- lf %>%
                                                     autoCollapse = TRUE,
                                                     hideMarkerOnCollapse = TRUE))
 
-
-saveWidget(lf, "mapa_interactivo_lf3.html")
+lf
+saveWidget(lf, paste0("mapa_interactivo_lf", Sys.time(), ".html"))
 
 
 
