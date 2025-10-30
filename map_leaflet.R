@@ -11,6 +11,7 @@ library(leaflet.providers) # other base maps
 # https://leaflet-extras.github.io/leaflet-providers/preview/
 library(leaflet.extras) # for layers and sublayers
 library(htmlwidgets)
+library(gsheet)
 library(googlesheets4)
 
 
@@ -40,6 +41,40 @@ df <- df %>%
   separate(inst_mun_coord,
            into = c("Mun_Latitude", "Mun_Longitude"),
            sep = ", ", convert = TRUE)
+
+# google sheets
+df <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1G1VxvZ5e2StEOhqEdcYvsouRjzYAJxVaKUYlx96pEKM/edit?usp=sharing")
+
+df <- df %>%
+  rename(res_name = "Name",
+         res_surname = "Surname",
+         institution = "Institution name",
+         institution2 = "Other institutions (Institution 2)",
+         link1 = "Website",
+         link2 = "Website 2",
+         inst_country = "Country of your institutional affiliation",
+         inst_coord = "Institution coordinates",
+         inst_coord2 = "Institution 2 coordinates",
+         field = "Geography of your current and past fieldsites:",
+         disc = "Main subdiscipines:",
+         date = "Marca temporal") %>%
+  mutate(name = paste(res_name, res_surname),
+         date = as.POSIXct(date,
+                           format = "%d/%m/%Y %H:%M:%S")) %>% # another format
+  group_by(name) %>%
+  slice_max(date, n = 1) %>% # keep only the most recent entry per researcher
+  ungroup() %>%
+  # if inst_coord is NA, use inst_coord2
+  mutate(inst_coord = ifelse(is.na(inst_coord) | inst_coord == "",
+                             inst_coord2,
+                             inst_coord)) %>%
+  separate(inst_coord,
+           into = c("Latitude", "Longitude"),
+           sep = ", ", convert = TRUE)
+
+# for now we use inst_coord2 if inst_coord is NA, but the name
+# should be institution2 in that case
+
 
 #### Researchers
 ## popup with links if available, discipline and institution
