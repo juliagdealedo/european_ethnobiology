@@ -49,13 +49,13 @@ df <- df %>%
   rename(res_name = "Name",
          res_surname = "Surname",
          institution = "Institution name",
-         institution2 = "Other institutions (Institution 2)",
+         institution2 = "Other institutions",
          link1 = "Website",
          link2 = "Website 2",
          inst_country = "Country of your institutional affiliation",
          inst_coord = "Institution coordinates",
          inst_coord2 = "Institution 2 coordinates",
-         field = "Geography of your current and past fieldsites:",
+         field = "Geography of your current and past field-sites:",
          disc = "Main subdiscipines:",
          date = "Marca temporal") %>%
   mutate(name = paste(res_name, res_surname),
@@ -144,7 +144,7 @@ icon_inst <- makeIcon(
 
 ## Fieldwork
 df_field <- df %>%
-  separate_rows(field, sep = ";") %>%
+  separate_rows(field, sep = ", ") %>%
   mutate(researchers = paste(name, collapse = "<br>"))
 
 # popup text for countries where researchers conduct fieldwork
@@ -153,6 +153,8 @@ popup_field <- df_field %>%
   summarise(researchers = paste(name, collapse = "<br>"))
 
 field_countries <- world_data %>% filter(admin %in% unique(df_field$field))
+field_notfound <- popup_field %>%
+  filter(!(field %in% world_data$admin))
 field_countries <- field_countries %>%
   left_join(popup_field, by = c("admin" = "field")) %>%
   mutate(popup_text = paste0("<span style='font-size:14px;'><b>",
@@ -176,12 +178,11 @@ lf <- leaflet(df) %>%
              clusterOptions = markerClusterOptions(
               iconCreateFunction = JS(
                 "function(cluster) {
-                  return L.divIcon({
-                    html: '<div style=\"background-color: #FFE2C7; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; border: 2px solid white;\">' + cluster.getChildCount() + '</div>',
-                    className: 'marker-cluster',
-                    iconSize: L.point(40, 40)
-                  });
-                }"
+                return L.divIcon({
+                html: '<div style=\"background-color: #FFE2C7; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; border: 2px solid white;\">' + cluster.getChildCount() + '</div>',
+                className: 'marker-cluster',
+                iconSize: L.point(40, 40)
+                });}"
              ))) %>%
 
   # Fieldwork
