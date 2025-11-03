@@ -16,31 +16,7 @@ library(googlesheets4)
 
 
 ################### LEAFLET ####################
-#### Data
-df <- read_xlsx("MAP/European Network of Ethnobiology.xlsx")
 
-# sheet_url <- "https://docs.google.com/dfasdasd"
-# df <- read_sheet(sheet_url)
-
-df <- df %>%
-  rename(res_name = "Your name:",
-         res_surname = "Your surname:",
-         institution = "Your current institutional affiliation 1:",
-         inst_country = "In which country is your current institution 1 located?",
-         inst_coord = "Coordinates Institution",
-         inst_mun_coord = "Coordinates Municipality",
-         field = "Geography of your current and past fieldsites:",
-         disc = "Main subdiscipines:",
-         link1 = "Link 1 - Your personal website or university page:",
-         link2 = "Link 2 - Your article depository:") %>%
-  mutate(disc = str_replace_all(disc, ";", ", ")) %>%
-  mutate(name = paste(res_name, res_surname)) %>%
-  separate(inst_coord,
-           into = c("Latitude", "Longitude"),
-           sep = ", ", convert = TRUE) %>%
-  separate(inst_mun_coord,
-           into = c("Mun_Latitude", "Mun_Longitude"),
-           sep = ", ", convert = TRUE)
 
 # google sheets
 df <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1G1VxvZ5e2StEOhqEdcYvsouRjzYAJxVaKUYlx96pEKM/edit?usp=sharing")
@@ -137,8 +113,8 @@ inst_countries <- inst_countries %>%
                              admin, "</b></span><br>",
                              researchers))
 icon_inst <- makeIcon(
-  iconUrl = "MAP/images/img.png",
-  iconWidth = 15, iconHeight = 15,
+  iconUrl = "MAP/images/img_shape.png",
+  iconWidth = 30, iconHeight = 38,
   iconAnchorX = 0, iconAnchorY = 0 # needs to be adjusted
 )
 
