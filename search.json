@@ -1,10 +1,10 @@
 [
   {
-    "objectID": "Projects.html",
-    "href": "Projects.html",
-    "title": "Projects",
+    "objectID": "Publications.html",
+    "href": "Publications.html",
+    "title": "Publications",
     "section": "",
-    "text": "Computational Ecology\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nContemplative Ecology\n\n\n\n\n\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Articles\n\nApellido1, apellido2 (2022) Reciprocity and interaction effectiveness in generalised mutualisms among free‐living species. Ecology etnbonotany 26 (1): 132-146. [PDF]\nNombre, Nombre2, (2016) Ciencia reproducible: ¿qué, por qué, cómo?. Ecosistemas 25 (2): 83-92\n\n\n\nBook chapters"
   },
   {
     "objectID": "Blog.html",
@@ -19,6 +19,13 @@
     "title": "Computational Ecology",
     "section": "",
     "text": "A computational approach to tough questions in ecology"
+  },
+  {
+    "objectID": "Projects.html",
+    "href": "Projects.html",
+    "title": "Projects",
+    "section": "",
+    "text": "Computational Ecology\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nContemplative Ecology\n\n\n\n\n\n\n\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "projects/contemplative-ecology.html",
@@ -47,12 +54,5 @@
     "title": "European Network of Ethnobiologists",
     "section": "Last News!",
     "text": "Last News!"
-  },
-  {
-    "objectID": "Publications.html",
-    "href": "Publications.html",
-    "title": "Publications",
-    "section": "",
-    "text": "Articles\n\nApellido1, apellido2 (2022) Reciprocity and interaction effectiveness in generalised mutualisms among free‐living species. Ecology etnbonotany 26 (1): 132-146. [PDF]\nNombre, Nombre2, (2016) Ciencia reproducible: ¿qué, por qué, cómo?. Ecosistemas 25 (2): 83-92\n\n\n\nBook chapters"
   }
 ]
