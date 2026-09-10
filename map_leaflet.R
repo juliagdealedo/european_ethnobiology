@@ -19,6 +19,7 @@ library(googlesheets4)
 #### Data from file
 df <- read_xlsx("MAP/European Network of Ethnobiology.xlsx")
 
+colnames(df)
 df <- df %>%
   rename(res_name = "Your name:",
          res_surname = "Your surname:",
@@ -165,7 +166,11 @@ lf <- leaflet(df) %>%
   setView(lng = mean(df$Longitude, na.rm = TRUE),
           lat = mean(df$Latitude, na.rm = TRUE),
           zoom = 3) %>%
-  addProviderTiles(providers$CartoDB.Voyager) %>%
+  addTiles(
+    urlTemplate = "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key=cb1_33ny_1_c59501205908fb8ac19d0b9c",
+    attribution = '&copy; OpenStreetMap contributors &copy; CARTO',
+    options = tileOptions(maxZoom = 20)
+  ) %>%
   # Researchers
   addMarkers(~Longitude, ~Latitude,
              popup = ~link_ok_pop,
@@ -232,10 +237,11 @@ lf <- lf %>%
                                                     hideMarkerOnCollapse = TRUE))
 
 lf
-saveWidget(lf, paste0("mapa_interactivo_lf", Sys.time(), ".html"))
 
 
+saveWidget(lf, paste0("mapa_interactivo_lf", Sys.time(), ".html"), selfcontained = T)
 
+dir()
 
 
 #### Disciplines filter
